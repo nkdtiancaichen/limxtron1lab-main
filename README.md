@@ -227,12 +227,12 @@ python scripts/rsl_rl/play.py --task=Isaac-Limx-PF-Blind-Flat-v0 --num_envs=100 
 
 ### 成果展示
 <p align="center">
-  <img src="./media/展示视频.gif" alt="成果展示" width="60%">
+  <img src="./media/展示视频.gif" alt="成果展示" width="100%">
 </p>
 
 ### 真实机器人部署
 <p align="center">
-  <img src="./media/rl_real.gif" alt="真实机器人" width="60%">
+  <img src="./media/rl_real.gif" alt="真实机器人" width="40%">
 </p>
 
 ---
