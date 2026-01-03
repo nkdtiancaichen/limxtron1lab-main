@@ -220,6 +220,11 @@ python scripts/rsl_rl/play.py --task=Isaac-Limx-PF-Blind-Flat-v0 --num_envs=100 
   <img src="./media/play_isaaclab.gif" alt="Isaac Lab仿真" width="60%">
 </p>
 
+### Mujoco中的仿真 / Simulation in Mujoco
+- **点足盲目平地 / Pointfoot Blind Flat**:
+
+![play_mujoco](./media/play_mujoco.gif)
+
 ### 成果展示
 <p align="center">
   <img src="./media/展示视频.gif" alt="成果展示" width="60%">
@@ -250,6 +255,7 @@ python scripts/rsl_rl/play.py --task=Isaac-Limx-PF-Blind-Flat-v0 --num_envs=100 
 ## 📄 许可证
 
 本项目基于 [MIT License](LICENCE) 开源。
+
 
 <p align="center">
   <em>探索机器人运动的无限可能</em>
