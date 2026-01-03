@@ -71,19 +71,19 @@ This repository is used to train and simulate bipedal robots, such as [limxdynam
 
 **训练曲线：**
 <p align="center">
-  <img src="media/图片4.png" alt="复杂地形训练" width="45%">
+  <img src="media/图片4.png" alt="复杂地形训练" width="100%">
 </p>
 
 <p align="center">
-  <img src="media/图片5.png" alt="地形奖励" width="45%">
+  <img src="media/图片5.png" alt="地形奖励" width="100%">
 </p>
 
 <p align="center">
-  <img src="media/图片6.png" alt="复杂地形训练" width="45%">
+  <img src="media/图片6.png" alt="复杂地形训练" width="100%">
 </p>
 
 <p align="center">
-  <img src="media/图片7.png" alt="地形奖励" width="45%">
+  <img src="media/图片7.png" alt="地形奖励" width="100%">
 </p>
 
 #### 3. 特技动作：单脚跳 (One-Legged Balancing)
@@ -106,14 +106,14 @@ This repository is used to train and simulate bipedal robots, such as [limxdynam
 
 **训练曲线：**
 <p align="center">
-  <img src="media/图片8.png" alt="单脚跳训练" width="45%">
+  <img src="media/图片8.png" alt="单脚跳训练" width="100%">
 </p>
 <p align="center">
-  <img src="media/图片9.png" alt="单脚跳姿势" width="45%">
+  <img src="media/图片9.png" alt="单脚跳姿势" width="100%">
 </p>
 
 <p align="center">
-  <img src="media/图片10.png" alt="单脚跳姿势" width="45%">
+  <img src="media/图片10.png" alt="单脚跳姿势" width="100%">
 </p>
 ---
 
