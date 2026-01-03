@@ -24,7 +24,7 @@ This repository is used to train and simulate bipedal robots, such as [limxdynam
 基于 Isaac Lab 的 Manager-Based RL 架构，我们实现了高度解耦的模块化设计：
 
 <p align="center">
-  <img src="media/图片1.png" alt="架构图" width="70%">
+  <img src="media/图片1.png" alt="架构图" width="50%">
 </p>
 ### 关键技术突破
 
@@ -79,11 +79,11 @@ This repository is used to train and simulate bipedal robots, such as [limxdynam
 </p>
 
 <p align="center">
-  <img src="media/图片6.png" alt="复杂地形训练" width="100%">
+  <img src="media/图片7.png" alt="地形奖励" width="100%">
 </p>
 
 <p align="center">
-  <img src="media/图片7.png" alt="地形奖励" width="100%">
+  <img src="media/图片6.png" alt="复杂地形训练" width="100%">
 </p>
 
 #### 3. 特技动作：单脚跳 (One-Legged Balancing)
@@ -108,12 +108,13 @@ This repository is used to train and simulate bipedal robots, such as [limxdynam
 <p align="center">
   <img src="media/图片8.png" alt="单脚跳训练" width="100%">
 </p>
-<p align="center">
-  <img src="media/图片9.png" alt="单脚跳姿势" width="100%">
-</p>
 
 <p align="center">
   <img src="media/图片10.png" alt="单脚跳姿势" width="100%">
+</p>
+
+<p align="center">
+  <img src="media/图片9.png" alt="单脚跳姿势" width="100%">
 </p>
 ---
 
