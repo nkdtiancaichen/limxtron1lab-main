@@ -18,6 +18,86 @@ With the help of [Isaac Lab](https://github.com/isaac-sim/IsaacLab), we can trai
 
 **关键词 / Keywords:** isaaclab, locomotion, bipedal, pointfoot, TRON1
 
+# 双足机器人强化学习运动控制项目 / Bipedal Robot RL Locomotion Learning Project
+
+该仓库用于训练和仿真双足机器人，例如 [limxdynamics TRON1](https://www.limxdynamics.com/en/tron1)。借助 [Isaac Lab](https://github.com/isaac-sim/IsaacLab) 框架，我们可以训练双足机器人在不同环境中行走，包括平地、粗糙地形和楼梯等。
+
+This repository is used to train and simulate bipedal robots, such as [limxdynamics TRON1](https://www.limxdynamics.com/en/tron1). With the help of [Isaac Lab](https://github.com/isaac-sim/IsaacLab), we can train the bipedal robots to walk in different environments, such as flat, rough, and stairs.
+
+**关键词 / Keywords:** isaaclab, locomotion, bipedal, pointfoot, TRON1
+
+## 🚀 项目概述
+
+本项目是一个基于 NVIDIA Isaac Lab 框架的双足机器人强化学习运动控制研究项目，专注于 limxdynamics TRON1 双足机器人在复杂环境下的运动策略学习。项目实现了从环境搭建到策略部署的完整强化学习闭环。
+
+## ✨ 核心特性
+
+- **多足配置支持**：点足(Pointfoot)、平足(Solefoot)、轮足(Wheelfoot)三种模式
+- **完整训练流程**：场景配置 → 奖励设计 → 策略训练 → 测试评估
+- **鲁棒性测试**：包括外力干扰和复杂地形适应能力测试
+- **开源项目结构**：标准化的代码组织与完整文档
+
+## 📁 项目结构
+
+```
+limxtron1lab-main/
+├── exts/bipedal_locomotion/    # 双足运动扩展模块
+│   ├── assets/                 # 机器人资产与配置
+│   ├── tasks/locomotion/       # 运动任务定义
+│   └── utils/                  # 工具函数
+├── rsl_rl/                     # RSL-RL算法实现
+├── scripts/                    # 训练与测试脚本
+├── .gitignore                  # Git忽略配置
+├── pyproject.toml             # 项目依赖配置
+└── README.md                  # 项目说明文档
+```
+
+## 🏗️ 技术架构
+
+- **仿真平台**: NVIDIA Isaac Lab (基于Omniverse)
+- **强化学习算法**: PPO (通过RSL-RL实现)
+- **编程语言**: Python
+- **支持平台**: Linux & Windows
+- **开发工具**: pre-commit代码检查
+
+## 🎯 研究内容
+
+1. **平地速度跟踪** - 实现精确的速度指令跟随
+2. **抗干扰测试** - 评估外力冲击下的稳定性
+3. **地形适应** - 在斜坡、台阶等复杂地形行走
+4. **奖励函数设计** - 优化策略学习效果
+
+## 🚦 快速开始
+
+### 环境配置
+```bash
+# 克隆仓库
+git clone https://github.com/nkdtiancaichen/limxtron1lab-main.git
+cd limxtron1lab-main
+
+# 安装依赖
+pip install -e .
+```
+
+### 训练示例
+```bash
+# 启动训练
+python scripts/rsl_rl/train.py --config path/to/config.yaml
+```
+
+## 📊 性能指标
+
+- **速度跟踪精度**: 指令速度与实际速度的均方误差(MSE)
+- **姿态稳定性**: 机器人基座的Roll/Pitch振荡幅度
+- **抗干扰能力**: 能承受的最大推力冲量(N·s)
+- **地形通过率**: 复杂地形下的成功到达率
+
+## 🤝 贡献指南
+
+1. Fork 本仓库
+2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -
+
 ## 安装 / Installation
 
 - 【非官方】强烈推荐使用一键安装脚本(pip)！
