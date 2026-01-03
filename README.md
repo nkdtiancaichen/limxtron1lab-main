@@ -26,7 +26,6 @@ This repository is used to train and simulate bipedal robots, such as [limxdynam
 <p align="center">
   <img src="media/图片1.png" alt="架构图" width="50%">
 </p>
-
 ### 关键技术突破
 
 #### 1. 平地速度跟随 (Flat Ground Velocity Tracking)
@@ -47,9 +46,12 @@ This repository is used to train and simulate bipedal robots, such as [limxdynam
 
 **训练曲线：**
 <p align="center">
-  <img src="media/图片2.png" alt="平地训练" width="45%">
-  <img src="media/图片3.png" alt="奖励曲线" width="45%">
+  <img src="media/图片2.png" alt="平地训练" width="80%">
 </p>
+<p align="center">
+  <img src="media/图片3.png" alt="奖励曲线" width="80%">
+</p>
+
 
 #### 2. 抗干扰鲁棒性测试与复杂地形适应
 
@@ -70,8 +72,17 @@ This repository is used to train and simulate bipedal robots, such as [limxdynam
 **训练曲线：**
 <p align="center">
   <img src="media/图片4.png" alt="复杂地形训练" width="45%">
+</p>
+
+<p align="center">
   <img src="media/图片5.png" alt="地形奖励" width="45%">
+</p>
+
+<p align="center">
   <img src="media/图片6.png" alt="复杂地形训练" width="45%">
+</p>
+
+<p align="center">
   <img src="media/图片7.png" alt="地形奖励" width="45%">
 </p>
 
@@ -96,10 +107,14 @@ This repository is used to train and simulate bipedal robots, such as [limxdynam
 **训练曲线：**
 <p align="center">
   <img src="media/图片8.png" alt="单脚跳训练" width="45%">
+</p>
+<p align="center">
   <img src="media/图片9.png" alt="单脚跳姿势" width="45%">
-  <img src="media/图片10.png" alt="单脚跳姿势" width="45%">
 </p>
 
+<p align="center">
+  <img src="media/图片10.png" alt="单脚跳姿势" width="45%">
+</p>
 ---
 
 ## 🚀 快速开始
@@ -135,12 +150,14 @@ cd rsl_rl
 python -m pip install -e .
 ```
 
-### IDE设置（可选）
-将.vscode/settings.json中的路径替换为实际使用的Isaaclab和Python路径，以获得更好的代码跳转支持。
+## IDE设置（可选）/ Set up IDE (Optional)
 
----
+要设置IDE，请按照以下说明操作：
+To setup the IDE, please follow these instructions:
 
-## 🎮 使用指南
+- 将.vscode/settings.json中的路径替换成使用者所使用的Isaaclab和python路径，这样当使用者对Isaaclab官方函数或变量进行检索的时候，可以直接跳入配置环境代码的定义。
+
+- Replace the path in .vscode/settings.json with the Isaaclab and python paths used by the user. This way, when the user retrieves the official functions or variables of Isaaclab, they can directly jump into the definition of the configuration environment code.
 
 ### 训练双足机器人智能体
 ```bash
@@ -160,9 +177,6 @@ python scripts/rsl_rl/train.py --task=Isaac-Limx-PF-Stunt-OneLeg-v0
 
 ### 运行训练好的模型
 ```bash
-# 基础模型测试
-python scripts/rsl_rl/play.py --task=Isaac-Limx-PF-Blind-Flat-Play-v0 --checkpoint_path=path/to/checkpoint
-
 # 走路+单脚跳展示：按k单脚跳，再按就变回走路
 python scripts/rsl_rl/play.py --task=Isaac-Limx-PF-Stunt-OneLeg-v0 --num_envs=1 --checkpoint_path="model/walk_model.pt" --hop_checkpoint_path="model/one_leg_model.pt" --video --video_length=10000
 
@@ -171,20 +185,30 @@ python scripts/rsl_rl/play.py --task=Isaac-Limx-PF-Blind-Flat-v0 --num_envs=100 
 ```
 
 ---
+## 在Mujoco中运行导出模型（仿真到仿真）/ Running exported model in mujoco (sim2sim)
 
-## 🌉 仿真到现实部署
+- 运行模型后，策略已经保存。您可以将策略导出到mujoco环境，并参照在github开源的部署工程[tron1-rl-deploy-python](https://github.com/limxdynamics/tron1-rl-deploy-python)在[pointfoot-mujoco-sim](https://github.com/limxdynamics/pointfoot-mujoco-sim)中运行。
 
-### 仿真到仿真 (Mujoco)
+  After playing the model, the policy has already been saved. You can export the policy to mujoco environment and run it in mujoco [pointfoot-mujoco-sim]((https://github.com/limxdynamics/pointfoot-mujoco-sim)) by using the [tron1-rl-deploy-python]((https://github.com/limxdynamics/tron1-rl-deploy-python)).
+
+- 按照说明正确安装，并用您训练的`policy.onnx`和`encoder.onnx`替换原始文件。
+
+  Following the instructions to install it properly and replace the origin policy by your trained `policy.onnx` and `encoder.onnx`.
+
+## 在真实机器人上运行导出模型（仿真到现实）/ Running exported model in real robot (sim2real)
 <p align="center">
-  <img alt="学习框架" src="./media/learning_frame.png">
+    <img alt="Figure2 of CTS" src="./media/learning_frame.png">
 </p>
 
-策略使用PPO在异步actor-critic框架内进行训练，灵感来自论文 *CTS: Concurrent Teacher-Student Reinforcement Learning for Legged Locomotion* ([H. Wang, H. Luo, W. Zhang, and H. Chen (2024)](https://doi.org/10.1109/LRA.2024.3457379))。
+**学习框架概述 / Overview of the learning framework.**
 
-将策略导出到Mujoco环境，参照[tron1-rl-deploy-python](https://github.com/limxdynamics/tron1-rl-deploy-python)在[pointfoot-mujoco-sim](https://github.com/limxdynamics/pointfoot-mujoco-sim)中运行。
+- 策略使用PPO在异步actor-critic框架内进行训练，动作由历史观察信息编码器和本体感受确定。**灵感来自论文CTS: Concurrent Teacher-Student Reinforcement Learning for Legged Locomotion. ([H. Wang, H. Luo, W. Zhang, and H. Chen (2024)](https://doi.org/10.1109/LRA.2024.3457379))**
 
-### 仿真到现实 (真实机器人)
-实机部署详情见 [limxdynamics文档](https://support.limxdynamics.com/docs/tron-1-sdk/rl-training-results-deployment) 8.1~8.2章节。
+  The policies are trained using PPO within an asymmetric actor-critic framework, with actions determined by history observations latent and proprioceptive observation. **Inspired by the paper CTS: Concurrent Teacher-Student Reinforcement Learning for Legged Locomotion. ([H. Wang, H. Luo, W. Zhang, and H. Chen (2024)](https://doi.org/10.1109/LRA.2024.3457379))**
+
+- 实机部署详情见 https://support.limxdynamics.com/docs/tron-1-sdk/rl-training-results-deployment 8.1~8.2章节
+
+  Real deployment details see section https://support.limxdynamics.com/docs/tron-1-sdk/rl-training-results-deployment 8.1 ~ 8.2
 
 ---
 
@@ -197,9 +221,7 @@ python scripts/rsl_rl/play.py --task=Isaac-Limx-PF-Blind-Flat-v0 --num_envs=100 
 
 ### 成果展示
 <p align="center">
-  <video width="90%" controls>
-    <source src="./media/展示视频.mp4" type="video/mp4">
-  </video>
+  <img src="./media/展示视频.gif" alt="成果展示" width="60%">
 </p>
 
 ### 真实机器人部署
@@ -224,18 +246,9 @@ python scripts/rsl_rl/play.py --task=Isaac-Limx-PF-Blind-Flat-v0 --num_envs=100 
 
 **项目成员：** 林江、陈东杰
 
----
-
 ## 📄 许可证
 
 本项目基于 [MIT License](LICENCE) 开源。
-
----
-**最后更新**: 2026年1月  
-**维护者**: 林江、陈东杰  
-**所属机构**: SDM5008课程项目组
-
----
 
 <p align="center">
   <em>探索机器人运动的无限可能</em>
