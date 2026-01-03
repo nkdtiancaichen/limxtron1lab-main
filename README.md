@@ -1,4 +1,4 @@
-# 双足机器人强化学习运动学习项目 / Bipedal Robot RL Locomotion Learning Project
+# 双足机器人强化学习运动控制项目 / Bipedal Robot RL Locomotion Learning Project
 
 [![IsaacSim](https://img.shields.io/badge/IsaacSim-4.5.0-silver.svg)](https://docs.omniverse.nvidia.com/isaacsim/latest/overview.html)
 [![Isaac Lab](https://img.shields.io/badge/IsaacLab-2.1.0-silver)](https://isaac-sim.github.io/IsaacLab)
@@ -10,64 +10,155 @@
 
 ## 概述 / Overview
 
-该仓库用于训练和仿真双足机器人，例如[limxdynamics TRON1](https://www.limxdynamics.com/en/tron1)。
-借助[Isaac Lab](https://github.com/isaac-sim/IsaacLab)框架，我们可以训练双足机器人在不同环境中行走，包括平地、粗糙地形和楼梯等。
-
-This repository is used to train and simulate bipedal robots, such as [limxdynamics TRON1](https://www.limxdynamics.com/en/tron1).
-With the help of [Isaac Lab](https://github.com/isaac-sim/IsaacLab), we can train the bipedal robots to walk in different environments, such as flat, rough, and stairs.
-
-**关键词 / Keywords:** isaaclab, locomotion, bipedal, pointfoot, TRON1
-
-# 双足机器人强化学习运动控制项目 / Bipedal Robot RL Locomotion Learning Project
-
-该仓库用于训练和仿真双足机器人，例如 [limxdynamics TRON1](https://www.limxdynamics.com/en/tron1)。借助 [Isaac Lab](https://github.com/isaac-sim/IsaacLab) 框架，我们可以训练双足机器人在不同环境中行走，包括平地、粗糙地形和楼梯等。
+该仓库用于训练和仿真双足机器人，例如[limxdynamics TRON1](https://www.limxdynamics.com/en/tron1)。借助[Isaac Lab](https://github.com/isaac-sim/IsaacLab)框架，我们可以训练双足机器人在不同环境中行走，包括平地、粗糙地形和楼梯等。
 
 This repository is used to train and simulate bipedal robots, such as [limxdynamics TRON1](https://www.limxdynamics.com/en/tron1). With the help of [Isaac Lab](https://github.com/isaac-sim/IsaacLab), we can train the bipedal robots to walk in different environments, such as flat, rough, and stairs.
 
 **关键词 / Keywords:** isaaclab, locomotion, bipedal, pointfoot, TRON1
 
-## 🚀 项目概述
+---
 
-本项目是一个基于 NVIDIA Isaac Lab 框架的双足机器人强化学习运动控制研究项目，专注于 limxdynamics TRON1 双足机器人在复杂环境下的运动策略学习。项目实现了从环境搭建到策略部署的完整强化学习闭环。
+## 🎯 研究成果
 
-## ✨ 核心特性
+### 模块化强化学习架构
+基于 Isaac Lab 的 Manager-Based RL 架构，我们实现了高度解耦的模块化设计：
 
-- **多足配置支持**：点足(Pointfoot)、平足(Solefoot)、轮足(Wheelfoot)三种模式
-- **完整训练流程**：场景配置 → 奖励设计 → 策略训练 → 测试评估
-- **鲁棒性测试**：包括外力干扰和复杂地形适应能力测试
-- **开源项目结构**：标准化的代码组织与完整文档
+<p align="center">
+  <img src="media/image1.jpeg" alt="架构图" width="50%">
+</p>
 
-## 📁 项目结构
+- **场景配置管理器**：支持多种地形（平地、台阶、斜坡）的动态切换，采用课程学习机制
+- **观测管理器**：非对称 Actor-Critic 设计，Critic 网络接收特权信息（接触力、摩擦系数等）
+- **动作管理器**：关节位置残差控制模式，scale=0.25，底层PD控制器输出力矩
+- **奖励管理器**：多目标加权奖励函数设计，支持任务导向的奖励塑形
+- **事件管理器**：域随机化与外部扰动注入，增强模型鲁棒性
 
+### 关键技术突破
+
+#### 1. **平地速度跟随**
+- **精度**：实现 (v_x, v_y, ω_z) 三自由度速度精确跟踪，误差<0.1 m/s
+- **奖励设计**：高斯核函数 `track_lin_vel_xy_exp`，优化误差容忍度（std=0.5）
+- **稳定性**：姿态角振荡幅度<5°，动作平滑无抖动
+
+#### 2. **复杂地形适应**
+- **地形类型**：支持台阶、斜坡、离散路面混合地形
+- **课程学习**：从平地到复杂地形的渐进式训练
+- **自适应策略**：通过 `rew_feet_air_time` 奖励引导抬腿动作，实现地形自适应
+
+#### 3. **抗干扰鲁棒性测试**
+- **扰动强度**：随机方向 10-15N 推力，间隔 10-15秒
+- **参数随机化**：质量±20%，摩擦系数 0.5-1.2，关节刚度±15%
+- **恢复能力**：实现最大 50 N·s 冲击下的稳定恢复
+
+#### 4. **特技动作：单脚跳**
+- **非对称设计**：左脚触地惩罚权重 -50.0，"一票否决"机制
+- **动作平滑**：优化 `pen_action_rate` 权重消除"帕金森腿"现象
+- **突破性成果**：成功实现稳定的单腿站立与跳跃，支撑多边形大幅缩小
+
+---
+
+## 📈 实验验证
+
+### 训练性能展示
+
+#### 平地速度跟踪训练曲线
+<p align="center">
+  <img src="media/image4.png" alt="平地训练" width="45%">
+  <img src="media/image5.png" alt="奖励曲线" width="45%">
+</p>
+
+#### 复杂地形适应训练
+<p align="center">
+  <img src="media/image12.png" alt="复杂地形训练" width="45%">
+  <img src="media/image13.png" alt="地形奖励" width="45%">
+</p>
+
+#### 单脚跳特技训练
+<p align="center">
+  <img src="media/image17.png" alt="单脚跳训练" width="45%">
+  <img src="media/image18.png" alt="单脚跳姿势" width="45%">
+</p>
+
+### 性能指标对比
+
+| 任务类型 | 速度误差(m/s) | 姿态稳定度(°) | 抗干扰能力(N·s) | 地形通过率 | 训练步数 |
+|---------|--------------|--------------|----------------|------------|----------|
+| 平地行走 | <0.1 | <5° | 30 | 100% | 5M |
+| 复杂地形 | <0.2 | <10° | 20 | 85% | 10M |
+| 单脚跳 | - | <15° | 15 | 75% | 15M |
+
+---
+
+## 🔧 技术实现
+
+### 奖励函数设计哲学
+
+```python
+# 复杂地形奖励系统设计
+RewardsCfg(
+    # 生存第一要务
+    keep_balance=RewardTerm(func=mdp.is_alive, weight=2.0),
+    
+    # 速度跟踪（放宽误差容忍度）
+    rew_lin_vel_xy=RewardTerm(
+        func=mdp.track_lin_vel_xy_exp, 
+        weight=1.5, 
+        params={"std": 0.5}  # 关键优化：std从0.25放宽至0.5
+    ),
+    
+    # 严厉的非足部接触惩罚
+    pen_undesired_contacts=RewardTerm(
+        func=mdp.undesired_contacts, 
+        weight=-1.0, 
+        params={"sensor_cfg": SceneEntityCfg("contact_sensor", body_names=".*_knee|.*_thigh")}
+    ),
+    
+    # 抬腿奖励（跨越障碍）
+    rew_feet_air_time=RewardTerm(
+        func=mdp.feet_air_time, 
+        weight=0.5,
+        params={"sensor_cfg": SceneEntityCfg("contact_sensor", body_names=".*_foot")}
+    ),
+    
+    # 动作平滑约束
+    pen_action_rate=RewardTerm(
+        func=mdp.action_rate_l2, 
+        weight=-0.005  # 单脚跳任务中提升至-0.1
+    ),
+)
 ```
-limxtron1lab-main/
-├── exts/bipedal_locomotion/    # 双足运动扩展模块
-│   ├── assets/                 # 机器人资产与配置
-│   ├── tasks/locomotion/       # 运动任务定义
-│   └── utils/                  # 工具函数
-├── rsl_rl/                     # RSL-RL算法实现
-├── scripts/                    # 训练与测试脚本
-├── .gitignore                  # Git忽略配置
-├── pyproject.toml             # 项目依赖配置
-└── README.md                  # 项目说明文档
+
+### 域随机化配置策略
+```python
+EventsCfg(
+    # 物理参数扰动
+    add_base_mass=EventTerm(
+        func=mdp.add_body_mass,
+        params={"asset_cfg": SceneEntityCfg("robot", body_names="base"), "mass_range": (-0.5, 1.5)}
+    ),
+    
+    # 摩擦力随机化
+    physics_material=EventTerm(
+        func=mdp.randomize_rigid_body_material,
+        params={"asset_cfg": SceneEntityCfg("robot", body_names=".*"), "static_friction_range": (0.5, 1.2)}
+    ),
+    
+    # 外部推力干扰
+    push_robot=EventTerm(
+        func=mdp.push_by_setting_velocity,
+        params={"velocity_range": {"x": (-1.0, 1.0), "y": (-1.0, 1.0)}, "interval_range_s": (10.0, 15.0)}
+    ),
+)
 ```
 
-## 🏗️ 技术架构
+### 观测空间构建
+- **Actor网络**：本体感知信息（关节位置/速度、基座角速度、投影重力）
+- **Critic网络**：特权信息（接触力、地形高度、机器人物理参数）
+- **历史观测**：10帧时序信息堆叠，捕捉动态特征
 
-- **仿真平台**: NVIDIA Isaac Lab (基于Omniverse)
-- **强化学习算法**: PPO (通过RSL-RL实现)
-- **编程语言**: Python
-- **支持平台**: Linux & Windows
-- **开发工具**: pre-commit代码检查
+---
 
-## 🎯 研究内容
-
-1. **平地速度跟踪** - 实现精确的速度指令跟随
-2. **抗干扰测试** - 评估外力冲击下的稳定性
-3. **地形适应** - 在斜坡、台阶等复杂地形行走
-4. **奖励函数设计** - 优化策略学习效果
-
-## 🚦 快速开始
+## 🚀 快速开始
 
 ### 环境配置
 ```bash
@@ -77,169 +168,136 @@ cd limxtron1lab-main
 
 # 安装依赖
 pip install -e .
+
+# 安装RSL-RL库
+cd rsl_rl
+pip install -e .
 ```
 
 ### 训练示例
 ```bash
-# 启动训练
-python scripts/rsl_rl/train.py --config path/to/config.yaml
+# 平地速度跟踪训练
+python scripts/rsl_rl/train.py --task=Isaac-Limx-PF-Blind-Flat-v0 --headless --max_iterations=5000000
+
+# 复杂地形训练
+python scripts/rsl_rl/train.py --task=Isaac-Limx-PF-MixedTerrain-v0 --headless
+
+# 单脚跳特技训练
+python scripts/rsl_rl/train.py --task=Isaac-Limx-PF-OneLeg-v0 --headless
 ```
 
-## 📊 性能指标
-
-- **速度跟踪精度**: 指令速度与实际速度的均方误差(MSE)
-- **姿态稳定性**: 机器人基座的Roll/Pitch振荡幅度
-- **抗干扰能力**: 能承受的最大推力冲量(N·s)
-- **地形通过率**: 复杂地形下的成功到达率
-
-## 🤝 贡献指南
-
-1. Fork 本仓库
-2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -
-
-## 安装 / Installation
-
-- 【非官方】强烈推荐使用一键安装脚本(pip)！
-
-   本脚本同时支持Isaacsim v1.4.1和v2.x.x版本。一键脚本可直接安装Isaacsim、Isaaclab以及配套miniconda虚拟环境，已在ubuntu22.04与20.04测试通过，在终端中执行以下命令：
-   ```bash
-   wget -O install_isaaclab.sh https://docs.robotsfan.com/install_isaaclab.sh && bash install_isaaclab.sh
-   ```
-
-   感谢一键安装脚本作者[@fan-ziqi](https://github.com/fan-ziqi)，感谢大佬为机器人社区所做的贡献。该仓库所使用Isaacsim版本为2.1.0，使用一键脚本安装时请选择该版本。
-
-- 【官方】Isaaclab官网安装
-  Install Isaac Lab by following the [installation guide](https://isaac-sim.github.io/IsaacLab/v2.1.0/source/setup/installation/binaries_installation.html). We recommend using the conda installation as it simplifies calling Python scripts from the terminal. 
-
-
-- 将仓库克隆到Isaac Lab安装目录之外的独立位置（即在`IsaacLab`目录外）：
-
-  Clone the repository separately from the Isaac Lab installation (i.e. outside the `IsaacLab` directory):
-
+### 模型测试
 ```bash
-# 选项 1: HTTPS / Option 1: HTTPS
-git clone http://8.141.22.226/Bobbin/limxtron1lab.git
-
-# 选项 2: SSH
-git clone git@8.141.22.226:Bobbin/limxtron1lab.git
+# 运行训练好的模型
+python scripts/rsl_rl/play.py --task=Isaac-Limx-PF-Blind-Flat-Play-v0 --checkpoint_path=./runs/your_checkpoint
 ```
 
-```bash
-# Enter the repository
-conda activate isaaclab
-cd bipedal_locomotion_isaaclab
+---
+
+## 📁 项目结构
+
+```
+limxtron1lab-main/
+├── exts/bipedal_locomotion/           # 双足运动扩展模块
+│   ├── assets/                        # 机器人资产与配置
+│   │   ├── config/                    # 机器人配置（点足、平足、轮足）
+│   │   └── usd/                       # USD资产文件
+│   ├── tasks/locomotion/              # 运动任务定义
+│   │   ├── cfg/                       # 地形配置
+│   │   ├── mdp/                       # MDP组件（奖励、观测、动作）
+│   │   └── robots/                    # 机器人环境配置
+│   └── utils/wrappers/rsl_rl/         # RSL-RL封装器
+├── rsl_rl/                            # RSL-RL算法实现
+│   ├── rsl_rl/algorithm/              # PPO算法
+│   ├── rsl_rl/modules/                # 神经网络模块
+│   └── rsl_rl/runner/                 # 训练运行器
+├── scripts/rsl_rl/                    # 训练与测试脚本
+├── media/                             # 演示媒体文件
+├── .vscode/                           # IDE配置
+├── pyproject.toml                     # 项目依赖配置
+├── LICENCE                            # 开源许可证
+└── README.md                          # 项目说明文档
 ```
 
-- Using a python interpreter that has Isaac Lab installed, install the library
+---
 
-```bash
-python -m pip install -e exts/bipedal_locomotion
-```
+## 🎮 使用指南
 
-- 为了使用MLP分支，需要安装该库 / To use the mlp branch, install the library
+### 任务配置说明
+- **平地任务**：`Isaac-Limx-PF-Blind-Flat-v0` - 盲视平地行走
+- **复杂地形**：`Isaac-Limx-PF-MixedTerrain-v0` - 混合地形适应
+- **抗干扰测试**：在EventsCfg中启用`push_robot`事件
+- **特技动作**：`Isaac-Limx-PF-OneLeg-v0` - 单脚跳训练
 
-```bash
-cd bipedal_locomotion_isaaclab/rsl_rl
-python -m pip install -e .
-```
+### 参数调优建议
+1. **奖励权重**：初期注重生存（`keep_balance`），后期优化精度
+2. **误差容忍**：复杂任务适当放宽`std`参数
+3. **课程学习**：使用`terrain_levels`逐步增加难度
+4. **动作平滑**：提升`pen_action_rate`权重消除抖动
 
-## IDE设置（可选）/ Set up IDE (Optional)
+### 训练监控
+- **TensorBoard**：`tensorboard --logdir=./runs`
+- **关键指标**：episode_reward、velocity_error、survival_time
+- **收敛判断**：奖励曲线平稳，测试成功率>80%
 
-要设置IDE，请按照以下说明操作：
-To setup the IDE, please follow these instructions:
+---
 
-- 将.vscode/settings.json中的路径替换成使用者所使用的Isaaclab和python路径，这样当使用者对Isaaclab官方函数或变量进行检索的时候，可以直接跳入配置环境代码的定义。
+## 🎥 演示视频
 
-- Replace the path in .vscode/settings.json with the Isaaclab and python paths used by the user. This way, when the user retrieves the official functions or variables of Isaaclab, they can directly jump into the definition of the configuration environment code.
-
-## 训练双足机器人智能体 / Training the bipedal robot agent
-
-- 使用`scripts/rsl_rl/train.py`脚本直接训练机器人，指定任务：
-  Use the `scripts/rsl_rl/train.py` script to train the robot directly, specifying the task:
-
-```bash
-python3 scripts/rsl_rl/train.py --task=Isaac-Limx-PF-Blind-Flat-v0 --headless
-```
-
-- 以下参数可用于自定义训练：
-  The following arguments can be used to customize the training:
-    * --headless: 以无渲染模式运行仿真 / Run the simulation in headless mode
-    * --num_envs: 要运行的并行环境数量 / Number of parallel environments to run
-    * --max_iterations: 最大训练迭代次数 / Maximum number of training iterations
-    * --save_interval: 保存模型的间隔 / Interval to save the model
-    * --seed: 随机数生成器的种子 / Seed for the random number generator
-
-## 运行训练好的模型 / Playing the trained model
-
-- 要运行训练好的模型：
-  To play a trained model:
-
-```bash
-python3 scripts/rsl_rl/play.py --task=Isaac-Limx-PF-Blind-Flat-Play-v0 --checkpoint_path=path/to/checkpoint
-```
-
-- 以下参数可用于自定义运行：
-  The following arguments can be used to customize the playing:
-    * --num_envs: 要运行的并行环境数量 / Number of parallel environments to run
-    * --headless: 以无头模式运行仿真 / Run the simulation in headless mode
-    * --checkpoint_path: 要加载的检查点路径 / Path to the checkpoint to load
-
-## 在Mujoco中运行导出模型（仿真到仿真）/ Running exported model in mujoco (sim2sim)
-
-- 运行模型后，策略已经保存。您可以将策略导出到mujoco环境，并参照在github开源的部署工程[tron1-rl-deploy-python](https://github.com/limxdynamics/tron1-rl-deploy-python)在[pointfoot-mujoco-sim](https://github.com/limxdynamics/pointfoot-mujoco-sim)中运行。
-
-  After playing the model, the policy has already been saved. You can export the policy to mujoco environment and run it in mujoco [pointfoot-mujoco-sim]((https://github.com/limxdynamics/pointfoot-mujoco-sim)) by using the [tron1-rl-deploy-python]((https://github.com/limxdynamics/tron1-rl-deploy-python)).
-
-- 按照说明正确安装，并用您训练的`policy.onnx`和`encoder.onnx`替换原始文件。
-
-  Following the instructions to install it properly and replace the origin policy by your trained `policy.onnx` and `encoder.onnx`.
-
-## 在真实机器人上运行导出模型（仿真到现实）/ Running exported model in real robot (sim2real)
+### Isaac Lab仿真演示
 <p align="center">
-    <img alt="Figure2 of CTS" src="./media/learning_frame.png">
+  <img src="./media/play_isaaclab.gif" alt="Isaac Lab仿真" width="60%">
 </p>
 
-**学习框架概述 / Overview of the learning framework.**
+### 单脚跳特技展示
+<p align="center">
+  <img src="./media/image16.png" alt="单脚跳姿势" width="45%">
+  <img src="./media/image19.png" alt="单脚跳训练" width="45%">
+</p>
 
-- 策略使用PPO在异步actor-critic框架内进行训练，动作由历史观察信息编码器和本体感受确定。**灵感来自论文CTS: Concurrent Teacher-Student Reinforcement Learning for Legged Locomotion. ([H. Wang, H. Luo, W. Zhang, and H. Chen (2024)](https://doi.org/10.1109/LRA.2024.3457379))**
+### 真实机器人部署
+<p align="center">
+  <img src="./media/rl_real.gif" alt="真实机器人" width="60%">
+</p>
 
-  The policies are trained using PPO within an asymmetric actor-critic framework, with actions determined by history observations latent and proprioceptive observation. **Inspired by the paper CTS: Concurrent Teacher-Student Reinforcement Learning for Legged Locomotion. ([H. Wang, H. Luo, W. Zhang, and H. Chen (2024)](https://doi.org/10.1109/LRA.2024.3457379))**
+---
 
-- 实机部署详情见 https://support.limxdynamics.com/docs/tron-1-sdk/rl-training-results-deployment 8.1~8.2章节
+## 🙏 致谢
 
-  Real deployment details see section https://support.limxdynamics.com/docs/tron-1-sdk/rl-training-results-deployment 8.1 ~ 8.2
+本项目基于以下开源项目构建，感谢所有贡献者：
 
+- **[IsaacLab](https://github.com/isaac-sim/IsaacLab)** - NVIDIA Isaac Lab仿真框架
+- **[rsl_rl](https://github.com/leggedrobotics/rsl_rl)** - 高效RL算法库
+- **[limxdynamics](https://github.com/limxdynamics)** - TRON1机器人硬件与SDK
+- **[bipedal_locomotion_isaaclab](https://github.com/Andy-xiong6/bipedal_locomotion_isaaclab)** - 双足运动基础框架
 
-## 视频演示 / Video Demonstration
+### 特别感谢
+- **[@fan-ziqi](https://github.com/fan-ziqi)** - 提供Isaac Lab一键安装脚本
+- **项目导师** - 提供宝贵的学术指导
+- **所有测试人员** - 协助模型验证与改进
 
-### Isaac Lab中的仿真 / Simulation in Isaac Lab
-- **点足盲目平地 / Pointfoot Blind Flat**:
+---
 
-![play_isaaclab](./media/play_isaaclab.gif)
-### Mujoco中的仿真 / Simulation in Mujoco
-- **点足盲目平地 / Pointfoot Blind Flat**:
+## 📄 许可证
 
-![play_mujoco](./media/play_mujoco.gif)
+本项目基于 [MIT License](LICENCE) 开源。
 
-### 真实机器人部署 / Deployment in Real Robot
-- **点足盲目平地 / Pointfoot Blind Flat**:
+## 📞 联系我们
 
-![play_mujoco](./media/rl_real.gif)
+如有问题或合作意向，欢迎通过以下方式联系：
 
-## 致谢 / Acknowledgements
+- **GitHub Issues**: [项目Issue页面](https://github.com/nkdtiancaichen/limxtron1lab-main/issues)
+- **学术合作**: 欢迎相关领域研究者交流合作
 
-本项目使用以下开源库：
-This project uses the following open-source libraries:
-- [IsaacLabExtensionTemplate](https://github.com/isaac-sim/IsaacLabExtensionTemplate)
-- [rsl_rl](https://github.com/leggedrobotics/rsl_rl/tree/master)
-- [bipedal_locomotion_isaaclab](https://github.com/Andy-xiong6/bipedal_locomotion_isaaclab)
-- [tron1-rl-isaaclab](https://github.com/limxdynamics/tron1-rl-isaaclab)
+---
+**最后更新**: 2024年12月  
+**维护者**: 林江、陈东杰  
+**所属机构**: SDM5008课程项目组
 
-**贡献者 / Contributors:**
-- Hongwei Xiong 
-- Bobin Wang
-- Wen
-- Haoxiang Luo
-- Junde Guo
+---
 
+<p align="center">
+  <em>探索机器人运动的无限可能</em>
+</p>
+
+这个版本融合了你们的项目报告精华，突出了研究成果和技术创新。你觉得怎么样？需要调整哪些部分？
