@@ -307,6 +307,9 @@ class EventsCfg:
             "operation": "scale",
         },
     )
+
+
+    
     
     robot_physics_material = EventTerm(
         func=mdp.randomize_rigid_body_material,     # 随机化物理材质 / Randomize physics material
@@ -401,26 +404,32 @@ class StuntOneLegRewardsCfg:
 
     # 2. 【核心规则】地板是熔岩！严惩左脚 (L) 触地
     # 请务必确认你的 robot body name 是 foot_L_Link 还是 foot_L 等
-    pen_left_foot_contact = RewTerm(
-        func=mdp.undesired_contacts,
-        weight=-10.0,  # 只要左脚碰到地，就扣大分
-        params={
-            "sensor_cfg": SceneEntityCfg("contact_forces", body_names=["foot_L_Link"]),
-            "threshold": 0.1,
-        },
-    )
+
 
     # 3. 【核心规则】诱导左脚 (L) 抬高
     # 复用 feet_regulation 或者写一个 target height 奖励
     rew_left_foot_lift = RewTerm(
         func=mdp.feet_regulation,
-        weight=5.0,
+        weight=10.0,
         params={
             "asset_cfg": SceneEntityCfg("robot", body_names=["foot_L_Link"]),
             "base_height_target": 0.35,  # 目标：让左脚一直保持在 0.35m 高度
             "foot_radius": 0.05
         },
     )
+
+
+    rew_left_foot_air_time = RewTerm(
+        func=mdp.feet_air_time,  # 使用air_time函数，奖励持续离地
+        weight=60.0,  # 大幅提高权重
+        params={
+            "command_name": "gait_command",  # 添加这个必要参数
+            "sensor_cfg": SceneEntityCfg("contact_forces", body_names=["foot_L_Link"]),
+            "threshold": 5.0,
+            # 去掉 "mode" 参数
+        },
+    )
+
 
     # 4. 支撑腿(右腿) 必须用力 (防止它直接趴下)
     # 我们可以通过奖励基座高度来实现，或者奖励右脚接触力
@@ -434,19 +443,19 @@ class StuntOneLegRewardsCfg:
     # 单脚跳很难精准控制速度，只要大概方向对就行
     rew_lin_vel_xy = RewTerm(
         func=mdp.track_lin_vel_xy_exp,
-        weight=2.0,
+        weight=5,
         params={"command_name": "base_velocity", "std": 1.0}  # std放宽到1.0
     )
 
     # 6. 松绑姿态限制 (允许侧倾平衡)
     pen_flat_orientation = RewTerm(
         func=mdp.flat_orientation_l2,
-        weight=-0.5  # 从 -5.0 降到 -0.5，允许为了平衡而歪身子
+        weight=-0.1  # 从 -5.0 降到 -0.5，允许为了平衡而歪身子
     )
 
     # 7. 其他辅助
-    pen_joint_torque = RewTerm(func=mdp.joint_torques_l2, weight=-1.0e-5)  # 允许大扭矩爆发
-    pen_action_rate = RewTerm(func=mdp.action_rate_l2, weight=-0.005)  # 允许快速动作
+    pen_joint_torque = RewTerm(func=mdp.joint_torques_l2, weight=-1.0e-2)  # 允许大扭矩爆发
+    pen_action_rate = RewTerm(func=mdp.action_rate_l2, weight=-0.3)  # 允许快速动作
     pen_undesired_contacts = RewTerm(  # 依然要防止膝盖跪地
         func=mdp.undesired_contacts,
         weight=-2.0,
@@ -457,17 +466,20 @@ class StuntOneLegRewardsCfg:
 
 @configclass
 class TerminationsCfg:
-    """终止条件配置类 / Termination conditions configuration class"""
-
-    # 时间超时终止 / Time out termination
+    """终止条件"""
     time_out = DoneTerm(func=mdp.time_out, time_out=True)
     
-    # 基座接触终止 (机器人倒下) / Base contact termination (robot falls down)
     base_contact = DoneTerm(
         func=mdp.illegal_contact,
+        params={"sensor_cfg": SceneEntityCfg("contact_forces", body_names="base_Link"), "threshold": 1.0},
+    )
+    
+    # 👇【新增】绝对不许左脚触地
+    illegal_foot_contact = DoneTerm(
+        func=mdp.illegal_contact,
         params={
-            "sensor_cfg": SceneEntityCfg("contact_forces", body_names="base_Link"),
-            "threshold": 1.0                        # 接触力阈值 / Contact force threshold
+            "sensor_cfg": SceneEntityCfg("contact_forces", body_names=["foot_L_Link"]), 
+            "threshold": 1.0
         },
     )
 
