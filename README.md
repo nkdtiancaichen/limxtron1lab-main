@@ -246,16 +246,18 @@ python scripts/rsl_rl/play.py --task=Isaac-Limx-PF-Blind-Flat-v0 --num_envs=100 
 - **[bipedal_locomotion_isaaclab](https://github.com/Andy-xiong6/bipedal_locomotion_isaaclab)** - 双足运动基础框架
 
 **特别感谢：**
-- **[@fan-ziqi](https://github.com/fan-ziqi)** - 提供Isaac Lab一键安装脚本
-- **项目导师** - 提供学术指导
-- **所有项目人员** - 协助模型验证与改进
+**贡献者 / Contributors:**
+- Hongwei Xiong 
+- Bobin Wang
+- Wen
+- Haoxiang Luo
+- Junde Guo
 
 **项目成员：** 林江、陈东杰
 
 ## 📄 许可证
 
 本项目基于 [MIT License](LICENCE) 开源。
-
 
 <p align="center">
   <em>探索机器人运动的无限可能</em>
