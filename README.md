@@ -26,7 +26,6 @@ This repository is used to train and simulate bipedal robots, such as [limxdynam
 <p align="center">
   <img src="media/图片1.png" alt="架构图" width="50%">
 </p>
-### 关键技术突破
 
 #### 1. 平地速度跟随 (Flat Ground Velocity Tracking)
 
