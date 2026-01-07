@@ -1,5 +1,6 @@
 # 双足机器人强化学习运动控制项目 / Bipedal Robot RL Locomotion Learning Project
-
+> **项目说明**  
+> 本项目为《高级机器人学》（Advanced Cognitive Robotics, ACR 2025）期末项目，课程链接：[https://clearlab-sustech.github.io/ACR2025/](https://clearlab-sustech.github.io/ACR2025/)
 [![IsaacSim](https://img.shields.io/badge/IsaacSim-4.5.0-silver.svg)](https://docs.omniverse.nvidia.com/isaacsim/latest/overview.html)
 [![Isaac Lab](https://img.shields.io/badge/IsaacLab-2.1.0-silver)](https://isaac-sim.github.io/IsaacLab)
 [![Python](https://img.shields.io/badge/python-3.10-blue.svg)](https://docs.python.org/3/whatsnew/3.10.html)
