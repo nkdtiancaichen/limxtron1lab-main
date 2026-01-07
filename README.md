@@ -122,14 +122,6 @@ This repository is used to train and simulate bipedal robots, such as [limxdynam
 ## 🚀 快速开始
 
 ### 环境配置
-
-**方法一：一键安装脚本（非官方，推荐）**
-```bash
-wget -O install_isaaclab.sh https://docs.robotsfan.com/install_isaaclab.sh && bash install_isaaclab.sh
-```
-感谢一键安装脚本作者[@fan-ziqi](https://github.com/fan-ziqi)。该仓库使用Isaacsim 2.1.0版本。
-
-**方法二：官方安装**
 按照 [Isaac Lab安装指南](https://isaac-sim.github.io/IsaacLab/v2.1.0/source/setup/installation/binaries_installation.html) 进行安装。
 
 ### 仓库克隆与依赖安装
@@ -159,6 +151,10 @@ python scripts/rsl_rl/train.py --task=Isaac-Limx-PF-Blind-Flat-v0 --headless
 
 # 单脚跳特技训练
 python scripts/rsl_rl/train.py --task=Isaac-Limx-PF-Stunt-OneLeg-v0
+
+# 在已有模型基础上继续训练
+python scripts/rsl_rl/train.py \ --task=Isaac-Limx-PF-Stunt-OneLeg-v0 --resume=True --checkpoint_path="" --run_name="model/one_leg_model.pt" --max_iterations=3000
+
 ```
 
 **训练参数：**
