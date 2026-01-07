@@ -150,15 +150,6 @@ cd rsl_rl
 python -m pip install -e .
 ```
 
-## IDE设置（可选）/ Set up IDE (Optional)
-
-要设置IDE，请按照以下说明操作：
-To setup the IDE, please follow these instructions:
-
-- 将.vscode/settings.json中的路径替换成使用者所使用的Isaaclab和python路径，这样当使用者对Isaaclab官方函数或变量进行检索的时候，可以直接跳入配置环境代码的定义。
-
-- Replace the path in .vscode/settings.json with the Isaaclab and python paths used by the user. This way, when the user retrieves the official functions or variables of Isaaclab, they can directly jump into the definition of the configuration environment code.
-
 ### 训练双足机器人智能体
 ```bash
 # 平地速度跟踪训练
@@ -183,33 +174,6 @@ python scripts/rsl_rl/play.py --task=Isaac-Limx-PF-Stunt-OneLeg-v0 --num_envs=1 
 # 多地形测试
 python scripts/rsl_rl/play.py --task=Isaac-Limx-PF-Blind-Flat-v0 --num_envs=100 --checkpoint_path="model/walk_model.pt" --hop_checkpoint_path="model/one_leg_model.pt"
 ```
-
----
-## 在Mujoco中运行导出模型（仿真到仿真）/ Running exported model in mujoco (sim2sim)
-
-- 运行模型后，策略已经保存。您可以将策略导出到mujoco环境，并参照在github开源的部署工程[tron1-rl-deploy-python](https://github.com/limxdynamics/tron1-rl-deploy-python)在[pointfoot-mujoco-sim](https://github.com/limxdynamics/pointfoot-mujoco-sim)中运行。
-
-  After playing the model, the policy has already been saved. You can export the policy to mujoco environment and run it in mujoco [pointfoot-mujoco-sim]((https://github.com/limxdynamics/pointfoot-mujoco-sim)) by using the [tron1-rl-deploy-python]((https://github.com/limxdynamics/tron1-rl-deploy-python)).
-
-- 按照说明正确安装，并用您训练的`policy.onnx`和`encoder.onnx`替换原始文件。
-
-  Following the instructions to install it properly and replace the origin policy by your trained `policy.onnx` and `encoder.onnx`.
-
-## 在真实机器人上运行导出模型（仿真到现实）/ Running exported model in real robot (sim2real)
-<p align="center">
-    <img alt="Figure2 of CTS" src="./media/learning_frame.png">
-</p>
-
-**学习框架概述 / Overview of the learning framework.**
-
-- 策略使用PPO在异步actor-critic框架内进行训练，动作由历史观察信息编码器和本体感受确定。**灵感来自论文CTS: Concurrent Teacher-Student Reinforcement Learning for Legged Locomotion. ([H. Wang, H. Luo, W. Zhang, and H. Chen (2024)](https://doi.org/10.1109/LRA.2024.3457379))**
-
-  The policies are trained using PPO within an asymmetric actor-critic framework, with actions determined by history observations latent and proprioceptive observation. **Inspired by the paper CTS: Concurrent Teacher-Student Reinforcement Learning for Legged Locomotion. ([H. Wang, H. Luo, W. Zhang, and H. Chen (2024)](https://doi.org/10.1109/LRA.2024.3457379))**
-
-- 实机部署详情见 https://support.limxdynamics.com/docs/tron-1-sdk/rl-training-results-deployment 8.1~8.2章节
-
-  Real deployment details see section https://support.limxdynamics.com/docs/tron-1-sdk/rl-training-results-deployment 8.1 ~ 8.2
-
 ---
 
 ## 🎥 演示视频
@@ -244,13 +208,6 @@ python scripts/rsl_rl/play.py --task=Isaac-Limx-PF-Blind-Flat-v0 --num_envs=100 
 - **[limxdynamics](https://github.com/limxdynamics)** - TRON1机器人硬件与SDK
 - **[bipedal_locomotion_isaaclab](https://github.com/Andy-xiong6/bipedal_locomotion_isaaclab)** - 双足运动基础框架
 
-**特别感谢：**
-**贡献者 / Contributors:**
-- Hongwei Xiong 
-- Bobin Wang
-- Wen
-- Haoxiang Luo
-- Junde Guo
 
 **项目成员：** 林江、陈东杰
 
