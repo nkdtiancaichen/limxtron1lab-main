@@ -178,24 +178,9 @@ python scripts/rsl_rl/play.py --task=Isaac-Limx-PF-Blind-Flat-v0 --num_envs=100 
 
 ## 🎥 演示视频
 
-### Isaac Lab仿真
-<p align="center">
-  <img src="./media/play_isaaclab.gif" alt="Isaac Lab仿真" width="60%">
-</p>
-
-### Mujoco中的仿真 / Simulation in Mujoco
-- **点足盲目平地 / Pointfoot Blind Flat**:
-
-![play_mujoco](./media/play_mujoco.gif)
-
 ### 成果展示
 <p align="center">
   <img src="./media/展示视频.gif" alt="成果展示" width="100%">
-</p>
-
-### 真实机器人部署
-<p align="center">
-  <img src="./media/rl_real.gif" alt="真实机器人" width="40%">
 </p>
 
 ---
